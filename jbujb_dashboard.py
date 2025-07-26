@@ -9,7 +9,7 @@ from datetime import timedelta
 # Page configuration
 st.set_page_config(page_title="JBUJB Merchant Dashboard", layout="wide")
 
-# Custom CSS for white background and orange text
+# Custom CSS for white background, orange headers, black text, and dark gray metric values
 st.markdown("""
 <style>
     .stApp {
@@ -18,7 +18,7 @@ st.markdown("""
     
     .main .block-container {
         background-color: white;
-        color: #FF6B35;
+        color: #000000;
     }
     
     h1, h2, h3, h4, h5, h6, .stMarkdown {
@@ -26,7 +26,7 @@ st.markdown("""
     }
     
     .metric-container {
-        background-color: #FFF5F0;
+        background-color: white;
         border: 2px solid #FF6B35;
         border-radius: 10px;
         padding: 15px;
@@ -34,7 +34,11 @@ st.markdown("""
     }
     
     .stMetric {
-        color: #FF6B35;
+        color: #333333 !important;
+    }
+    
+    .stMetric label {
+        color: #FF6B35 !important;
     }
     
     .stSelectbox label, .stDateInput label {
@@ -42,7 +46,15 @@ st.markdown("""
     }
     
     .sidebar .sidebar-content {
-        background-color: #FFF5F0;
+        background-color: white;
+    }
+    
+    .stDataFrame, .stTable {
+        color: #000000;
+    }
+    
+    .stPlotlyChart {
+        background-color: white;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -51,7 +63,7 @@ st.markdown("""
 st.title("📊 JBUJB Merchant Insights Dashboard")
 
 # Sidebar Filters
-st.sidebar.header("📅 Filters")
+st.sidebar.header("Filters")
 
 # Date filter options
 filter_option = st.sidebar.selectbox(
@@ -105,13 +117,14 @@ def generate_sample_data(days):
         'total_revenue': total_revenue,
         'avg_time_scan_to_order': np.random.uniform(5, 12),
         'avg_order_value': total_revenue / max(total_orders, 1),
-        'orders_per_table_per_hour': np.random.uniform(2, 6),
         'canceled_orders': int(total_orders * np.random.uniform(0.05, 0.15)),
         'repeat_visitors_pct': np.random.uniform(15, 30),
         'avg_session_duration': np.random.uniform(3, 8),
         'bounce_rate': np.random.uniform(25, 45),
         'coupon_redemption_rate': np.random.uniform(8, 20),
-        'item_conversion_rate': np.random.uniform(15, 35)
+        'item_conversion_rate': np.random.uniform(15, 35),
+        'customer_retention_rate': np.random.uniform(20, 40),
+        'avg_fulfillment_time': np.random.uniform(10, 20)
     }
 
 data = generate_sample_data(days_in_range)
@@ -153,17 +166,17 @@ with col5:
 
 with col6:
     st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-    st.metric("Orders Per Table/Hour", f"{data['orders_per_table_per_hour']:.1f}")
+    st.metric("Canceled Orders", f"{data['canceled_orders']}")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col7:
     st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-    st.metric("Canceled Orders", f"{data['canceled_orders']}")
+    st.metric("Repeat Visitors", f"{data['repeat_visitors_pct']:.1f}%")
     st.markdown('</div>', unsafe_allow_html=True)
 
 with col8:
     st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-    st.metric("Repeat Visitors", f"{data['repeat_visitors_pct']:.1f}%")
+    st.metric("Customer Retention Rate", f"{data['customer_retention_rate']:.1f}%")
     st.markdown('</div>', unsafe_allow_html=True)
 
 # Third row of KPIs
@@ -186,7 +199,7 @@ with col11:
 
 with col12:
     st.markdown('<div class="metric-container">', unsafe_allow_html=True)
-    st.metric("Item Conversion Rate", f"{data['item_conversion_rate']:.1f}%")
+    st.metric("Avg Fulfillment Time", f"{data['avg_fulfillment_time']:.1f} min")
     st.markdown('</div>', unsafe_allow_html=True)
 
 st.markdown("---")
@@ -196,7 +209,7 @@ col_left, col_right = st.columns(2)
 
 with col_left:
     # Traffic Overview
-    st.subheader("📈 QR Scans Traffic Overview")
+    st.subheader("QR Scans Traffic Overview")
     traffic_dates = pd.date_range(start=start_date, end=end_date)
     traffic_data = pd.DataFrame({
         "Date": traffic_dates,
@@ -208,13 +221,13 @@ with col_left:
     fig_traffic.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        font_color='#FF6B35'
+        font_color='#000000'
     )
     st.plotly_chart(fig_traffic, use_container_width=True)
 
 with col_right:
     # Time of Day Analysis
-    st.subheader("🕐 Peak Usage Hours")
+    st.subheader("Peak Usage Hours")
     hours = list(range(8, 23))  # 8 AM to 10 PM
     usage_data = pd.DataFrame({
         "Hour": [f"{h}:00" for h in hours],
@@ -226,12 +239,12 @@ with col_right:
     fig_hours.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        font_color='#FF6B35'
+        font_color='#000000'
     )
     st.plotly_chart(fig_hours, use_container_width=True)
 
 # Menu Items Analysis
-st.subheader("🍔 Menu Items Performance")
+st.subheader("Menu Items Performance")
 
 col_items1, col_items2 = st.columns(2)
 
@@ -254,8 +267,26 @@ with col_items2:
     })
     st.dataframe(most_ordered, use_container_width=True)
 
+# Menu Category Performance
+st.subheader("Menu Category Performance")
+category_data = pd.DataFrame({
+    "Category": ["Mains", "Appetizers", "Desserts", "Beverages"],
+    "Orders": [250, 150, 80, 120],
+    "Revenue (MAD)": [6250, 2250, 1200, 960]
+})
+fig_category = px.bar(category_data, x="Category", y="Orders", 
+                     color_discrete_sequence=['#FF6B35'],
+                     title="Orders by Menu Category")
+fig_category.update_layout(
+    plot_bgcolor='white',
+    paper_bgcolor='white',
+    font_color='#000000'
+)
+st.plotly_chart(fig_category, use_container_width=True)
+st.dataframe(category_data, use_container_width=True)
+
 # Low Performing Items
-st.subheader("⚠️ Items Needing Attention")
+st.subheader("⚠Items Needing Attention")
 low_performing = pd.DataFrame({
     "Item": ["Vegetarian Tagine", "Fish Pastilla", "Almond Cookies"],
     "Views": [120, 85, 95],
@@ -266,7 +297,7 @@ low_performing = pd.DataFrame({
 st.dataframe(low_performing, use_container_width=True)
 
 # Coupons Performance
-st.subheader("🎟️ Coupon Performance")
+st.subheader("Coupon Performance")
 col_coupon1, col_coupon2 = st.columns(2)
 
 with col_coupon1:
@@ -285,53 +316,41 @@ with col_coupon2:
     fig_coupon.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        font_color='#FF6B35'
+        font_color='#000000'
     )
     st.plotly_chart(fig_coupon, use_container_width=True)
 
-# Location Performance
-st.subheader("📍 Location Performance")
-location_perf = pd.DataFrame({
-    "Location": ["Casablanca Center", "Rabat Marina", "Marrakech Medina", "Fez Ville Nouvelle"],
-    "QR Scans": [580, 420, 350, 290],
-    "Orders": [75, 58, 48, 38],
-    "Revenue (MAD)": [2400, 1850, 1650, 1200],
-    "Avg Order Value (MAD)": [32.0, 31.9, 34.4, 31.6]
-})
-st.dataframe(location_perf, use_container_width=True)
+# Customer-Level Insights
+st.subheader("👤 Top Customer Insights")
 
-# Device Insights
-st.subheader("📱 Customer Device Insights")
-col_device1, col_device2 = st.columns(2)
+col_cust1, col_cust2 = st.columns(2)
 
-with col_device1:
-    device_data = pd.DataFrame({
-        "Device": ["Mobile", "Desktop", "Tablet"],
-        "Usage": [79, 18, 3]
+with col_cust1:
+    st.write("**Top Customers by Spend**")
+    top_customers = pd.DataFrame({
+        "Customer ID": ["CUST001", "CUST002", "CUST003", "CUST004"],
+        "Total Spend (MAD)": [1250, 980, 750, 620],
+        "Order Count": [10, 8, 6, 5]
     })
-    
-    fig_device = px.pie(device_data, values="Usage", names="Device",
-                       color_discrete_sequence=['#FF6B35', '#FFB396', '#FFC9B5'])
-    fig_device.update_layout(
-        plot_bgcolor='white',
-        paper_bgcolor='white',
-        font_color='#FF6B35'
-    )
-    st.plotly_chart(fig_device, use_container_width=True)
+    st.dataframe(top_customers, use_container_width=True)
 
-with col_device2:
-    st.write("**Device Performance Metrics**")
-    device_metrics = pd.DataFrame({
-        "Device": ["Mobile", "Desktop", "Tablet"],
-        "Avg Session (min)": [4.2, 6.8, 5.1],
-        "Conversion Rate (%)": [12.8, 15.2, 11.4],
-        "Bounce Rate (%)": [38.5, 28.2, 35.1]
+with col_cust2:
+    st.write("**Customer Order Frequency**")
+    order_freq = pd.DataFrame({
+        "Customer ID": ["CUST001", "CUST002", "CUST003", "CUST004"],
+        "Orders": [10, 8, 6, 5],
+        "Last Order Date": [
+            (today - timedelta(days=2)).strftime("%Y-%m-%d"),
+            (today - timedelta(days=5)).strftime("%Y-%m-%d"),
+            (today - timedelta(days=10)).strftime("%Y-%m-%d"),
+            (today - timedelta(days=15)).strftime("%Y-%m-%d")
+        ]
     })
-    st.dataframe(device_metrics, use_container_width=True)
+    st.dataframe(order_freq, use_container_width=True)
 
 # Footer
 st.markdown("---")
 st.markdown(
-    '<p style="text-align: center; color: #FF6B35;">JBUJB QR Insights Dashboard — Enhanced v2.0</p>', 
+    '<p style="text-align: center; color: #FF6B35;">JBUJB QR Insights Dashboard — Enhanced v3.1</p>', 
     unsafe_allow_html=True
 )
