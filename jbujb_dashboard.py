@@ -321,7 +321,7 @@ show_predictions = st.sidebar.checkbox("Show Trend Predictions", value=False)
 days_in_range = (end_date - start_date).days + 1
 data = generate_enhanced_data(days_in_range)
 
-st.sidebar.markdown("###  Quick Stats")
+st.sidebar.markdown("### 📈 Quick Stats")
 st.sidebar.metric("Period", f"{days_in_range} days")
 st.sidebar.metric("Avg Daily Scans", f"{data['total_qr_scans']/days_in_range:.0f}")
 st.sidebar.metric("Avg Daily Revenue", f"{data['total_revenue']/days_in_range:.0f} MAD")
@@ -414,7 +414,7 @@ st.markdown('<div class="section-header"><h3>📊 Performance Analytics</h3></di
 col_left, col_right = st.columns(2)
 
 with col_left:
-    st.subheader(" Daily Performance Trends")
+    st.subheader("📈 Daily Performance Trends")
     
     # Multi-line chart
     fig_trends = go.Figure()
@@ -437,18 +437,23 @@ with col_left:
     fig_trends.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        font_color='#333',
         height=400,
         hovermode='x unified',
-        yaxis=dict(title="QR Scans", side="left"),
+        xaxis_title="Date",
+        yaxis_title="QR Scans",
         yaxis2=dict(title="Orders (×10)", side="right", overlaying="y"),
-        legend=dict(x=0, y=1.1, orientation="h")
+        legend=dict(x=0, y=1.1, orientation="h"),
+        font=dict(size=14, color="#000000")
     )
+    
+    # Ensure axis text is visible
+    fig_trends.update_xaxes(tickfont=dict(color="#000000", size=12))
+    fig_trends.update_yaxes(tickfont=dict(color="#000000", size=12))
     
     st.plotly_chart(fig_trends, use_container_width=True)
 
 with col_right:
-    st.subheader(" Peak Usage Hours")
+    st.subheader("⏰ Peak Usage Hours")
     
     # Enhanced hourly data
     hours = list(range(8, 23))
@@ -470,12 +475,16 @@ with col_right:
     fig_hours.update_layout(
         plot_bgcolor='white',
         paper_bgcolor='white',
-        font_color='#333',
         height=400,
-        yaxis_title="Orders",
         xaxis_title="Hour of Day",
-        showlegend=False
+        yaxis_title="Orders",
+        showlegend=False,
+        font=dict(size=14, color="#000000")
     )
+    
+    # Ensure axis text is visible
+    fig_hours.update_xaxes(tickfont=dict(color="#000000", size=12))
+    fig_hours.update_yaxes(tickfont=dict(color="#000000", size=12))
     
     st.plotly_chart(fig_hours, use_container_width=True)
 
@@ -485,7 +494,7 @@ st.markdown('<div class="section-header"><h3>🍽️ Menu Performance Analytics<
 col_menu1, col_menu2 = st.columns(2)
 
 with col_menu1:
-    st.write("** Top Performing Items**")
+    st.write("**🏆 Top Performing Items**")
     top_items = pd.DataFrame({
         "Item": ["Big Bite", "Super Filet", "Maxi Grill", "Zinker", "Chicken Wings"],
         "Views": [485, 420, 385, 350, 320],
@@ -516,7 +525,11 @@ fig_category = px.treemap(
     color_continuous_scale='Oranges',
     title="Revenue Distribution by Category"
 )
-fig_category.update_layout(height=400, font_color='#333')
+fig_category.update_layout(
+    height=400,
+    font=dict(size=14, color="#000000"),
+    title_font=dict(size=16, color="#000000")
+)
 st.plotly_chart(fig_category, use_container_width=True)
 
 # ---------- Alerts and Recommendations ----------
@@ -559,7 +572,7 @@ st.markdown('<div class="section-header"><h3>👥 Customer Analytics</h3></div>'
 col_cust1, col_cust2, col_cust3 = st.columns(3)
 
 with col_cust1:
-    st.write("** Top Customers**")
+    st.write("**💰 Top Customers**")
     top_customers = pd.DataFrame({
         "Customer": ["VIP-001", "VIP-002", "VIP-003", "REG-004", "REG-005"],
         "Spend (MAD)": [1450, 1200, 980, 750, 650],
@@ -578,11 +591,14 @@ with col_cust2:
     
     fig_segments = px.pie(segments, values='Count', names='Segment', 
                          color_discrete_sequence=['#ff6a00', '#ff8533', '#ffb366', '#ffcc99'])
-    fig_segments.update_layout(height=300)
+    fig_segments.update_layout(
+        height=300,
+        font=dict(size=14, color="#000000")
+    )
     st.plotly_chart(fig_segments, use_container_width=True)
 
 with col_cust3:
-    st.write("** Retention Metrics**")
+    st.write("**🎯 Retention Metrics**")
     st.metric("Customer Retention", f"{data['customer_retention_rate']:.1f}%")
     st.metric("Repeat Visitors", f"{data['repeat_visitors_pct']:.1f}%")
     st.metric("Avg Customer Lifetime", "4.2 months")
@@ -594,7 +610,7 @@ st.markdown("---")
 col_export, col_info = st.columns([3, 1])
 
 with col_export:
-    if st.button(" Export Dashboard Data", type="primary"):
+    if st.button("📊 Export Dashboard Data", type="primary"):
         # Create export data
         export_data = {
             'period': f"{start_date} to {end_date}",
@@ -614,7 +630,7 @@ with col_info:
 
 st.markdown("""
 <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; margin-top: 2rem;">
-    <h4 style="color: #ff6a00; margin: 0;">🍔 JBUJB Enhanced Analytics Dashboard</h4>
+    <h4 style="color: #ff6a00; margin: 0;"> JBUJB Enhanced Analytics Dashboard</h4>
     <p style="color: #6c757d; margin: 0.5rem 0 0 0;">Version 4.0 - Powered by Advanced Analytics & Real-time Insights</p>
 </div>
 """, unsafe_allow_html=True)
