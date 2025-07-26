@@ -276,7 +276,7 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ---------- Enhanced Sidebar ----------
-st.sidebar.markdown("###  Dashboard Filters")
+st.sidebar.markdown("### 📊 Dashboard Filters")
 
 # Time period selection
 filter_option = st.sidebar.selectbox(
@@ -313,7 +313,7 @@ else:
         start_date, end_date = today - timedelta(days=7), today
 
 # Additional filters
-st.sidebar.markdown("###  Additional Filters")
+st.sidebar.markdown("### 🎯 Additional Filters")
 show_comparison = st.sidebar.checkbox("Show Period Comparison", value=True)
 show_predictions = st.sidebar.checkbox("Show Trend Predictions", value=False)
 
@@ -322,13 +322,11 @@ days_in_range = (end_date - start_date).days + 1
 data = generate_enhanced_data(days_in_range)
 
 st.sidebar.markdown("###  Quick Stats")
-st.sidebar.markdown(f"""
-<div class="sidebar-metric">
-    <strong>Period:</strong> {days_in_range} days<br>
-    <strong>Avg Daily Scans:</strong> {data['total_qr_scans']/days_in_range:.0f}<br>
-    <strong>Avg Daily Revenue:</strong> {data['total_revenue']/days_in_range:.0f} MAD
-</div>
-""", unsafe_allow_html=True)
+st.sidebar.metric("Period", f"{days_in_range} days")
+st.sidebar.metric("Avg Daily Scans", f"{data['total_qr_scans']/days_in_range:.0f}")
+st.sidebar.metric("Avg Daily Revenue", f"{data['total_revenue']/days_in_range:.0f} MAD")
+st.sidebar.metric("Total QR Scans", f"{data['total_qr_scans']:,}")
+st.sidebar.metric("Total Revenue", f"{data['total_revenue']:.0f} MAD")
 
 # ---------- Enhanced KPI Section ----------
 st.markdown('<div class="section-header"><h3>📊 Key Performance Indicators</h3></div>', unsafe_allow_html=True)
@@ -499,7 +497,7 @@ with col_menu1:
     st.dataframe(top_items, use_container_width=True)
 
 with col_menu2:
-    st.write("** Category Performance**")
+    st.write("**📊 Category Performance**")
     category_data = pd.DataFrame({
         "Category": ["Burgers", "Sandwiches", "Fried Items", "Beverages", "Desserts"],
         "Orders": [285, 180, 95, 140, 85],
@@ -553,7 +551,7 @@ for alert in alerts:
     if alert['type'] == 'warning':
         st.warning(f"🚨 **{alert['title']}** - {alert['message']}")
     else:
-        st.info(f" **{alert['title']}** - {alert['message']}")
+        st.info(f"💡 **{alert['title']}** - {alert['message']}")
 
 # ---------- Customer Analytics ----------
 st.markdown('<div class="section-header"><h3>👥 Customer Analytics</h3></div>', unsafe_allow_html=True)
@@ -571,7 +569,7 @@ with col_cust1:
     st.dataframe(top_customers, use_container_width=True)
 
 with col_cust2:
-    st.write("**Customer Segments**")
+    st.write("**📊 Customer Segments**")
     segments = pd.DataFrame({
         "Segment": ["VIP", "Regular", "New", "At Risk"],
         "Count": [15, 45, 25, 8],
@@ -584,7 +582,7 @@ with col_cust2:
     st.plotly_chart(fig_segments, use_container_width=True)
 
 with col_cust3:
-    st.write("**🎯 Retention Metrics**")
+    st.write("** Retention Metrics**")
     st.metric("Customer Retention", f"{data['customer_retention_rate']:.1f}%")
     st.metric("Repeat Visitors", f"{data['repeat_visitors_pct']:.1f}%")
     st.metric("Avg Customer Lifetime", "4.2 months")
@@ -596,7 +594,7 @@ st.markdown("---")
 col_export, col_info = st.columns([3, 1])
 
 with col_export:
-    if st.button("📊 Export Dashboard Data", type="primary"):
+    if st.button(" Export Dashboard Data", type="primary"):
         # Create export data
         export_data = {
             'period': f"{start_date} to {end_date}",
@@ -616,7 +614,7 @@ with col_info:
 
 st.markdown("""
 <div style="text-align: center; padding: 2rem; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 12px; margin-top: 2rem;">
-    <h4 style="color: #ff6a00; margin: 0;"> JBUJB Enhanced Analytics Dashboard</h4>
+    <h4 style="color: #ff6a00; margin: 0;">🍔 JBUJB Enhanced Analytics Dashboard</h4>
     <p style="color: #6c757d; margin: 0.5rem 0 0 0;">Version 4.0 - Powered by Advanced Analytics & Real-time Insights</p>
 </div>
 """, unsafe_allow_html=True)
