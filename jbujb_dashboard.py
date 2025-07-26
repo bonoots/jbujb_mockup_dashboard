@@ -267,6 +267,52 @@ def generate_enhanced_data(days, seed=42):
     
     return data
 
+# ---------- Logo at Top Left ----------
+# Create a container for the logo at the top
+logo_container = st.container()
+with logo_container:
+    # Create columns to position logo on the left
+    logo_col, spacer_col = st.columns([1, 5])
+    
+    with logo_col:
+        import os
+        if os.path.exists("jbujb_logo_1.svg"):
+            try:
+                # Try direct SVG display first
+                st.image("jbujb_logo_1.svg", width=150)
+            except:
+                try:
+                    # Fallback: Embed SVG as HTML
+                    with open("jbujb_logo_1.svg", "r") as f:
+                        svg_content = f.read()
+                    
+                    st.markdown(f"""
+                        <div style="width: 150px; height: auto;">
+                            {svg_content}
+                        </div>
+                    """, unsafe_allow_html=True)
+                except:
+                    # Final fallback: Text logo
+                    st.markdown("""
+                        <div style="width: 150px; height: 60px; background: #ff6a00; color: white; 
+                                    display: flex; align-items: center; justify-content: center; 
+                                    font-weight: bold; font-size: 24px; border-radius: 8px;">
+                            JBUJB
+                        </div>
+                    """, unsafe_allow_html=True)
+        else:
+            # Show fallback if file not found
+            st.markdown("""
+                <div style="width: 150px; height: 60px; background: #ff6a00; color: white; 
+                            display: flex; align-items: center; justify-content: center; 
+                            font-weight: bold; font-size: 24px; border-radius: 8px;">
+                    JBUJB
+                </div>
+            """, unsafe_allow_html=True)
+    
+    with spacer_col:
+        st.write("")  # Empty spacer
+
 # ---------- Header ----------
 st.markdown("""
     <div class="main-header">
