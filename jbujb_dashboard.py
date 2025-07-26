@@ -9,7 +9,7 @@ from datetime import timedelta
 # Page configuration
 st.set_page_config(page_title="JBUJB Merchant Dashboard", layout="wide")
 
-# Custom CSS for white background, orange headers, black text, and dark gray metric values
+# Custom CSS for white background, orange headers, black text, and black metric values
 st.markdown("""
 <style>
     .stApp {
@@ -34,7 +34,7 @@ st.markdown("""
     }
     
     .stMetric {
-        color: #333333 !important;
+        color: #000000 !important;
     }
     
     .stMetric label {
@@ -56,11 +56,28 @@ st.markdown("""
     .stPlotlyChart {
         background-color: white;
     }
+    
+    .logo-container {
+        display: flex;
+        align-items: center;
+    }
+    
+    .logo-img {
+        width: 100px;
+        height: auto;
+        margin-right: 20px;
+    }
 </style>
 """, unsafe_allow_html=True)
 
-# Title
-st.title("📊 JBUJB Merchant Insights Dashboard")
+# Logo and Title
+col_logo, col_title = st.columns([1, 4])
+with col_logo:
+    # Use relative path to the logo SVG file in the same directory as dashboard.py
+    logo_path = "jbujb_logo.svg"
+    st.markdown(f'<div class="logo-container"><img class="logo-img" src="{logo_path}" alt="JBUJB Logo"></div>', unsafe_allow_html=True)
+with col_title:
+    st.title("JBUJB Merchant Insights Dashboard")
 
 # Sidebar Filters
 st.sidebar.header("Filters")
@@ -130,7 +147,7 @@ def generate_sample_data(days):
 data = generate_sample_data(days_in_range)
 
 # KPI Overview Section
-st.subheader("📊 Key Performance Indicators")
+st.subheader("Key Performance Indicators")
 
 # First row of KPIs
 col1, col2, col3, col4 = st.columns(4)
@@ -251,7 +268,7 @@ col_items1, col_items2 = st.columns(2)
 with col_items1:
     st.write("**Top Viewed Menu Items**")
     top_viewed = pd.DataFrame({
-        "Item": ["Tagine Chicken", "Couscous Royal", "Pastilla", "Harira Soup", "Mint Tea"],
+        "Item": ["Big Bite", "Zinker", "Super Filet", "Maxi Grill", "Chicken Wings"],
         "Views": [450, 380, 320, 280, 250],
         "Orders": [95, 85, 70, 65, 60]
     })
@@ -261,7 +278,7 @@ with col_items1:
 with col_items2:
     st.write("**Most Ordered Items**")
     most_ordered = pd.DataFrame({
-        "Item": ["Couscous Royal", "Tagine Chicken", "Pastilla", "Harira Soup", "Lamb Kebab"],
+        "Item": ["Super Filet", "Maxi Grill", "Chicken Wings", "Zinker", "Big Bite"],
         "Orders": [95, 90, 78, 65, 58],
         "Revenue (MAD)": [2375, 2250, 1950, 975, 1450]
     })
@@ -270,9 +287,9 @@ with col_items2:
 # Menu Category Performance
 st.subheader("Menu Category Performance")
 category_data = pd.DataFrame({
-    "Category": ["Mains", "Appetizers", "Desserts", "Beverages"],
-    "Orders": [250, 150, 80, 120],
-    "Revenue (MAD)": [6250, 2250, 1200, 960]
+    "Category": ["Burgers", "Sandwiches", "Fried", "Ice creams", "Soft Drinks"],
+    "Orders": [250, 150, 80, 100, 120],
+    "Revenue (MAD)": [6250, 2250, 1200, 2480, 960]
 })
 fig_category = px.bar(category_data, x="Category", y="Orders", 
                      color_discrete_sequence=['#FF6B35'],
@@ -286,9 +303,9 @@ st.plotly_chart(fig_category, use_container_width=True)
 st.dataframe(category_data, use_container_width=True)
 
 # Low Performing Items
-st.subheader("⚠Items Needing Attention")
+st.subheader("⚠️ Items Needing Attention")
 low_performing = pd.DataFrame({
-    "Item": ["Vegetarian Tagine", "Fish Pastilla", "Almond Cookies"],
+    "Item": ["Butter Chicken", "Kadai Chicken", "Croquettes"],
     "Views": [120, 85, 95],
     "Orders": [8, 5, 12],
     "Conversion Rate": [6.7, 5.9, 12.6],
@@ -351,6 +368,8 @@ with col_cust2:
 # Footer
 st.markdown("---")
 st.markdown(
-    '<p style="text-align: center; color: #FF6B35;">JBUJB QR Insights Dashboard — Enhanced v3.1</p>', 
+    '<p style="text-align: center; color: #FF6B35;">JBUJB QR Insights Dashboard — Enhanced v3.2</p>', 
     unsafe_allow_html=True
 )
+
+# Note: Replace the 'logo_url' with the actual path or URL to your JBUJB logo image
