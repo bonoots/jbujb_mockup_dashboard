@@ -627,11 +627,11 @@ for alert in alerts:
     if alert['type'] == 'error':
         st.error(f"🔴 **{alert['title']}** - {alert['message']}")
     elif alert['type'] == 'warning':
-        st.warning(f"🟡 **{alert['title']}** - {alert['message']}")
+        st.warning(f"🟠 **{alert['title']}** - {alert['message']}")
     elif alert['type'] == 'success':
         st.success(f"🟢 **{alert['title']}** - {alert['message']}")
     else:
-        st.info(f"🔵 **{alert['title']}** - {alert['message']}")
+        st.info(f"🟡 **{alert['title']}** - {alert['message']}")
 
 # ---------- Customer Analytics ----------
 st.markdown('<div class="section-header"><h3>👥 Customer Analytics</h3></div>', unsafe_allow_html=True)
