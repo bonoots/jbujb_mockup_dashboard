@@ -74,7 +74,7 @@ st.markdown("""
 col_logo, col_title = st.columns([1, 4])
 with col_logo:
     # Use relative path to the logo SVG file in the same directory as dashboard.py
-    logo_path = "jbujb_logo.svg"
+    logo_path = "jbujb_logo_1.svg"
     st.markdown(f'<div class="logo-container"><img class="logo-img" src="{logo_path}" alt="JBUJB Logo"></div>', unsafe_allow_html=True)
 with col_title:
     st.title("JBUJB Merchant Insights Dashboard")
